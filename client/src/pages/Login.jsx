@@ -1,5 +1,7 @@
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+const URL = "http://localhost:5000/api/auth/login";
 
 export const Login = () => {
   const [user, setUser] = useState({
@@ -7,7 +9,7 @@ export const Login = () => {
     password: "",
   });
 
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // let handle the input field value
   const handleInput = (e) => {
@@ -21,9 +23,35 @@ export const Login = () => {
   };
 
   //handle form on submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
+
+    try {
+      const response = await fetch(URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      console.log("login ", response);
+
+      if (response.ok) {
+        setUser({ email: "", password: "" });
+        alert("Login Successfull...");
+        // const responseData = await response.json();
+        // console.log("after login: ", responseData);
+        // toast.success("Registration Successful");
+        // saveTokenInLocalStr(responseData.token);
+        navigate("/");
+      } else {
+        alert("Invalid Creadential");
+        console.log("Invalid Creadential");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
