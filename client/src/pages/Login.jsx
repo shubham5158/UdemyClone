@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../store/auth";
 
 const URL = "http://localhost:5000/api/auth/login";
 
@@ -10,6 +11,8 @@ export const Login = () => {
   });
 
   const navigate = useNavigate();
+
+  const {storetokenInLs} = useAuth();
 
   // let handle the input field value
   const handleInput = (e) => {
@@ -40,10 +43,10 @@ export const Login = () => {
       if (response.ok) {
         setUser({ email: "", password: "" });
         alert("Login Successfull...");
-        // const responseData = await response.json();
-        // console.log("after login: ", responseData);
+        const res_data = await response.json();
+        // console.log("after login: ", res_data);
         // toast.success("Registration Successful");
-        // saveTokenInLocalStr(responseData.token);
+        storetokenInLs(res_data.token);
         navigate("/");
       } else {
         alert("Invalid Creadential");
